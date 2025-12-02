@@ -1,0 +1,35 @@
+CHAPTER 1
+INTRODUCTION
+The competitive gaming industry has experienced unprecedented growth over the past decade, with
+millions of players worldwide competing in games like Valorant, Counter-Strike 2, Rocket League, Dota
+2, and other esports titles. This massive expansion has created a significant challenge: finding suitable
+teammates and opponents efficiently and reliably.
+Currently, competitive gamers rely on fragmented and inefficient solutions to discover potential
+teammates and opponents. Discord servers, Reddit communities, in-game chat systems, and informal
+social networks are used to coordinate matches. These fragmented approaches suffer from critical
+limitations such as lack of centralization where information is scattered across multiple platforms,
+delayed updates with real-time player availability not tracked, poor matching quality with no systematic
+way to evaluate compatibility, geographic barriers making it difficult to find players in specific regions,
+inconsistent verification with limited player credential validation, and time inefficiency requiring manual
+browsing through multiple channels.
+Nexus addresses these gaps by providing a dedicated real-time platform where players can manually
+browse, discover, and directly connect with compatible teammates and opponents. Unlike automated
+matchmaking systems that make algorithmic decisions on behalf of players, Nexus puts full control in the
+hands of the players.
+1.1 Objectives
+The following are the objectives of this project:
+To design an efficient real-time platform that enables competitive gamers to browse and manually
+discover compatible players.
+To implement a player discovery system with real-time updates and advanced filtering capabilities
+based on game type, skill level, and region.
+To provide players with complete control over match initiation and connection decisions, ensuring
+player autonomy.
+To integrate real-time communication features including WebSocket notifications, instant player feeds,
+and voice communication.
+To create a responsive, user-friendly interface accessible across devices and operating systems.
+To deploy a production-ready platform with low upfront infrastructure costs using cloud-native
+technologies.
+To ensure security and data privacy through robust authentication mechanisms and secure session
+management.
+To provide Progressive Web App (PWA) functionality enabling users to install the platform as a native
+application.

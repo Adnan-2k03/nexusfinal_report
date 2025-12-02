@@ -1,0 +1,59 @@
+CHAPTER 1
+INTRODUCTION
+The competitive gaming industry has experienced unprecedented growth over the past decade, with
+millions of players worldwide competing in games like Valorant, Counter-Strike 2, Rocket League, Dota
+2, and other esports titles. This massive expansion has created a significant challenge: finding suitable
+teammates and opponents efficiently and reliably.
+Currently, competitive gamers rely on fragmented and inefficient solutions to discover potential
+teammates and opponents. Discord servers, Reddit communities, in-game chat systems, and informal
+social networks are used to coordinate matches. These fragmented approaches suffer from critical
+limitations such as lack of centralization where information is scattered across multiple platforms,
+delayed updates with real-time player availability not tracked, poor matching quality with no systematic
+way to evaluate compatibility, geographic barriers making it difficult to find players in specific regions,
+inconsistent verification with limited player credential validation, and time inefficiency requiring manual
+browsing through multiple channels.
+Nexus addresses these gaps by providing a dedicated real-time platform where players can manually
+browse, discover, and directly connect with compatible teammates and opponents. Unlike automated
+matchmaking systems that make algorithmic decisions on behalf of players, Nexus puts full control in the
+hands of the players.
+1.1 Objectives
+The following are the objectives of this project:
+To design an efficient real-time platform that enables competitive gamers to browse and manually
+discover compatible players.
+To implement a player discovery system with real-time updates and advanced filtering capabilities
+based on game type, skill level, and region.
+To provide players with complete control over match initiation and connection decisions, ensuring
+player autonomy.
+To integrate real-time communication features including WebSocket notifications, instant player feeds,
+and voice communication.
+To create a responsive, user-friendly interface accessible across devices and operating systems.
+To deploy a production-ready platform with low upfront infrastructure costs using cloud-native
+technologies.
+To ensure security and data privacy through robust authentication mechanisms and secure session
+management.
+To provide Progressive Web App (PWA) functionality enabling users to install the platform as a native
+application.
+1.2 Background and Literature Survey
+The competitive gaming ecosystem currently lacks a unified player discovery platform. Research into
+existing solutions reveals several approaches.
+Discord-based Solutions: Gaming communities primarily use Discord servers for team formation.
+However, Discord lacks player-specific filtering, match history tracking, and real-time availability
+indicators.
+Reddit Communities: Subreddits like r/recruitplayers serve as bulletin boards but suffer from poor
+organization, lack of verification, and outdated information.
+In-Game Systems: Some games provide built-in matchmaking, but these are automatic and do not
+provide manual control to players. Players cannot filter based on personal preferences or playstyle.
+This project builds upon established research in real-time communication systems, web technologies,
+and player-centric design principles to create a dedicated platform specifically designed for competitive
+gaming communities.
+1.3 Organization of the Report
+This capstone project report is organized as follows. Chapter 2 presents the system architecture and
+design, including the proposed system components and technical stack. Chapter 3 details the
+implementation of core components including the player discovery system, real-time WebSocket layer,
+and frontend architecture. Chapter 4 covers deployment and infrastructure, explaining how the system is
+deployed on production servers with security measures. Chapter 5 presents results and discussion of
+performance metrics, system reliability, and user experience testing. Chapter 6 provides cost analysis for
+both MVP phase and projected scaling scenarios. Chapter 7 concludes the report with project
+achievements and suggestions for future enhancements. Chapter 8 lists all references and citations used
+in the project. Chapter 9 contains appendices with technical details, database schema, and API
+documentation.
