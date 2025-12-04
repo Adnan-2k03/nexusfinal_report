@@ -425,12 +425,12 @@ addImageWithCaption(
   420
 );
 
-doc.font('Helvetica-Bold').fontSize(12).text('FIGURE 2: PROBLEM vs SOLUTION COMPARISON');
+doc.font('Helvetica-Bold').fontSize(12).text('FIGURE 2: PROBLEM vs NEXUS SOLUTION - COMPLETE FEATURE COMPARISON');
 doc.moveDown(0.5);
 addImageWithCaption(
-  path.join(GENERATED_IMAGES_DIR, 'problem_vs_solution_comparison.png'),
+  path.join(GENERATED_IMAGES_DIR, 'nexus_features_comparison_diagram.png'),
   2,
-  'Comparison between the fragmented current approach versus the unified Nexus solution with all features in one platform.',
+  'Comprehensive comparison showing fragmented current solutions (Discord, Reddit, in-game chat) versus unified Nexus platform with all features: LFG, LFO, 1-on-1 Text/Voice Chat, Group Voice Channels, Screen Sharing, Player Portfolio, Real-time Notifications, and Cross-platform PWA.',
   420
 );
 
