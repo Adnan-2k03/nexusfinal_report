@@ -1,10 +1,10 @@
-import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType, BorderStyle, PageBreak, HeadingLevel, Header, Footer } from 'docx';
+import { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, AlignmentType, BorderStyle, PageBreak, HeadingLevel } from 'docx';
 import * as fs from 'fs';
 
 const FONT_FAMILY = "Times New Roman";
-const FONT_SIZE_NORMAL = 24; // 12pt
-const FONT_SIZE_TITLE = 32; // 16pt
-const FONT_SIZE_HEADING = 28; // 14pt
+const FONT_SIZE_NORMAL = 24;
+const FONT_SIZE_TITLE = 32;
+const FONT_SIZE_HEADING = 28;
 
 function createTitle(text, size = FONT_SIZE_TITLE) {
   return new Paragraph({
@@ -125,19 +125,19 @@ function createStudentTable() {
       }),
       new TableRow({
         children: [
-          new TableCell({ children: [createCenteredText("Mayakuntla Lokesh")] }),
-          new TableCell({ children: [createCenteredText("22BCE9911")] }),
-        ],
-      }),
-      new TableRow({
-        children: [
-          new TableCell({ children: [createCenteredText("Thokala Sravan")] }),
+          new TableCell({ children: [createCenteredText("Sayan")] }),
           new TableCell({ children: [createCenteredText("22BCE9745")] }),
         ],
       }),
       new TableRow({
         children: [
-          new TableCell({ children: [createCenteredText("Tatikonda Srilekha")] }),
+          new TableCell({ children: [createCenteredText("Mayakunta Lokesh Thokala")] }),
+          new TableCell({ children: [createCenteredText("22BCE9911")] }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({ children: [createCenteredText("Tarikonda Srilekha")] }),
           new TableCell({ children: [createCenteredText("22BCE20420")] }),
         ],
       }),
@@ -147,23 +147,39 @@ function createStudentTable() {
 
 function createTOCTable() {
   const tocEntries = [
-    { sno: "1.", title: "Acknowledgement", page: "3" },
-    { sno: "2.", title: "Abstract", page: "4" },
-    { sno: "3.", title: "List of Figures and Tables", page: "6" },
-    { sno: "4.", title: "1 Introduction", page: "8" },
+    { sno: "", title: "Acknowledgement", page: "3" },
+    { sno: "", title: "Abstract", page: "4" },
+    { sno: "", title: "List of Figures and Tables", page: "6" },
+    { sno: "1", title: "Introduction", page: "8" },
     { sno: "", title: "1.1 Objectives", page: "9" },
-    { sno: "", title: "1.2 Background and Literature Survey", page: "10" },
-    { sno: "5.", title: "2 System Architecture and Design", page: "11" },
-    { sno: "", title: "2.1 Proposed System", page: "11" },
-    { sno: "", title: "2.2 Technical Stack", page: "13" },
-    { sno: "", title: "2.3 System Design Details", page: "15" },
-    { sno: "6.", title: "3 Implementation Details", page: "17" },
-    { sno: "7.", title: "4 Deployment and Infrastructure", page: "20" },
-    { sno: "8.", title: "5 Results and Discussion", page: "23" },
-    { sno: "9.", title: "6 Cost Analysis", page: "25" },
-    { sno: "10.", title: "7 Conclusion & Future Works", page: "27" },
-    { sno: "11.", title: "8 References", page: "29" },
-    { sno: "12.", title: "9 Appendix", page: "30" },
+    { sno: "", title: "1.2 Problem Statement & Background", page: "10" },
+    { sno: "", title: "1.3 Organization of the Report", page: "11" },
+    { sno: "2", title: "Proposed System & Methodology", page: "12" },
+    { sno: "", title: "2.1 Problem Analysis", page: "12" },
+    { sno: "", title: "2.2 System Requirements", page: "13" },
+    { sno: "", title: "2.3 Proposed Solution Architecture", page: "14" },
+    { sno: "", title: "2.4 System Workflow", page: "15" },
+    { sno: "3", title: "System Implementation & Technical Details", page: "17" },
+    { sno: "", title: "3.1 Technical Stack", page: "17" },
+    { sno: "", title: "3.2 System Architecture", page: "18" },
+    { sno: "", title: "3.3 Database Schema", page: "19" },
+    { sno: "", title: "3.4 Key Components & Features", page: "20" },
+    { sno: "", title: "3.5 API Architecture", page: "21" },
+    { sno: "", title: "3.6 Real-Time Communication", page: "22" },
+    { sno: "4", title: "External Services & Cost Analysis", page: "23" },
+    { sno: "", title: "4.1 Service Overview", page: "23" },
+    { sno: "", title: "4.2 Pricing Breakdown", page: "24" },
+    { sno: "", title: "4.3 MVP Cost Breakdown", page: "25" },
+    { sno: "5", title: "Results & Discussion", page: "27" },
+    { sno: "", title: "5.1 Deployment Results", page: "27" },
+    { sno: "", title: "5.2 System Performance", page: "28" },
+    { sno: "", title: "5.3 Cost-Benefit Analysis", page: "29" },
+    { sno: "6", title: "Conclusion & Future Works", page: "30" },
+    { sno: "", title: "6.1 Key Achievements", page: "30" },
+    { sno: "", title: "6.2 Challenges & Solutions", page: "31" },
+    { sno: "", title: "6.3 Future Enhancements", page: "32" },
+    { sno: "7", title: "References", page: "33" },
+    { sno: "8", title: "Appendix", page: "34" },
   ];
 
   return new Table({
@@ -193,55 +209,7 @@ function createTOCTable() {
           new TableCell({ children: [createCenteredText(entry.sno)] }),
           new TableCell({ children: [new Paragraph({
             alignment: AlignmentType.LEFT,
-            children: [new TextRun({ text: entry.title, size: FONT_SIZE_NORMAL, font: FONT_FAMILY })]
-          })] }),
-          new TableCell({ children: [createCenteredText(entry.page)] }),
-        ],
-      })),
-    ],
-  });
-}
-
-function createListOfFiguresTable() {
-  const figures = [
-    { no: "1.", title: "Core Features Overview", page: "11" },
-    { no: "2.", title: "Connection Types Comparison", page: "12" },
-    { no: "3.", title: "Gaming Profile Components", page: "12" },
-    { no: "4.", title: "Player Autonomy Model", page: "13" },
-    { no: "5.", title: "Technical Stack Layers", page: "14" },
-    { no: "6.", title: "Real-Time System Architecture", page: "16" },
-    { no: "7.", title: "Database Schema Overview", page: "18" },
-    { no: "8.", title: "Deployment Architecture", page: "21" },
-  ];
-
-  return new Table({
-    width: { size: 100, type: WidthType.PERCENTAGE },
-    rows: [
-      new TableRow({
-        children: [
-          new TableCell({
-            children: [createCenteredText("Figure No.", true)],
-            width: { size: 15, type: WidthType.PERCENTAGE },
-          }),
-          new TableCell({
-            children: [new Paragraph({
-              alignment: AlignmentType.LEFT,
-              children: [new TextRun({ text: "Title", bold: true, size: FONT_SIZE_NORMAL, font: FONT_FAMILY })]
-            })],
-            width: { size: 65, type: WidthType.PERCENTAGE },
-          }),
-          new TableCell({
-            children: [createCenteredText("Page No.", true)],
-            width: { size: 20, type: WidthType.PERCENTAGE },
-          }),
-        ],
-      }),
-      ...figures.map(entry => new TableRow({
-        children: [
-          new TableCell({ children: [createCenteredText(entry.no)] }),
-          new TableCell({ children: [new Paragraph({
-            alignment: AlignmentType.LEFT,
-            children: [new TextRun({ text: entry.title, size: FONT_SIZE_NORMAL, font: FONT_FAMILY })]
+            children: [new TextRun({ text: entry.title, bold: entry.sno !== "", size: FONT_SIZE_NORMAL, font: FONT_FAMILY })]
           })] }),
           new TableCell({ children: [createCenteredText(entry.page)] }),
         ],
@@ -252,7 +220,12 @@ function createListOfFiguresTable() {
 
 function createListOfTablesTable() {
   const tables = [
-    { no: "1.", title: "Cost Analysis", page: "x" },
+    { no: "1", title: "Cost Analysis (MVP Phase)", page: "x" },
+    { no: "2", title: "API Endpoints Overview", page: "x" },
+    { no: "5", title: "Firebase SMS Pricing by Region", page: "x" },
+    { no: "6", title: "System Performance Metrics", page: "x" },
+    { no: "7", title: "Database Tables and Schema", page: "x" },
+    { no: "8", title: "External Services Comparison", page: "x" },
   ];
 
   return new Table({
@@ -291,6 +264,56 @@ function createListOfTablesTable() {
   });
 }
 
+function createListOfFiguresTable() {
+  const figures = [
+    { no: "1", title: "Core Features Overview", page: "x" },
+    { no: "2", title: "System Architecture Diagram", page: "x" },
+    { no: "3", title: "Three-Tier Architecture", page: "x" },
+    { no: "4", title: "User Journey: Finding a Match", page: "x" },
+    { no: "5", title: "Real-Time WebSocket Flow", page: "x" },
+    { no: "6", title: "Database Schema Overview", page: "x" },
+    { no: "7", title: "API Request-Response Example", page: "x" },
+    { no: "8", title: "Deployment Architecture", page: "x" },
+    { no: "9", title: "Cost Breakdown by Service", page: "x" },
+    { no: "10", title: "Performance Metrics Chart", page: "x" },
+  ];
+
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({
+            children: [createCenteredText("Figure No.", true)],
+            width: { size: 15, type: WidthType.PERCENTAGE },
+          }),
+          new TableCell({
+            children: [new Paragraph({
+              alignment: AlignmentType.LEFT,
+              children: [new TextRun({ text: "Title", bold: true, size: FONT_SIZE_NORMAL, font: FONT_FAMILY })]
+            })],
+            width: { size: 65, type: WidthType.PERCENTAGE },
+          }),
+          new TableCell({
+            children: [createCenteredText("Page No.", true)],
+            width: { size: 20, type: WidthType.PERCENTAGE },
+          }),
+        ],
+      }),
+      ...figures.map(entry => new TableRow({
+        children: [
+          new TableCell({ children: [createCenteredText(entry.no)] }),
+          new TableCell({ children: [new Paragraph({
+            alignment: AlignmentType.LEFT,
+            children: [new TextRun({ text: entry.title, size: FONT_SIZE_NORMAL, font: FONT_FAMILY })]
+          })] }),
+          new TableCell({ children: [createCenteredText(entry.page)] }),
+        ],
+      })),
+    ],
+  });
+}
+
 // === PAGE 1: TITLE PAGE ===
 const titlePage = [
   new Paragraph({ spacing: { after: 400 } }),
@@ -307,21 +330,18 @@ const titlePage = [
   createCenteredText("IN", true),
   createCenteredText("COMPUTER SCIENCE AND ENGINEERING", true),
   new Paragraph({ spacing: { after: 300 } }),
-  createCenteredText("By"),
+  createCenteredText("by"),
   new Paragraph({ spacing: { after: 200 } }),
   createStudentTable(),
   new Paragraph({ spacing: { after: 400 } }),
   createCenteredText("Under the Guidance of"),
-  createCenteredText("Dr. Saroj Kumar Panigrahy", true),
+  createCenteredText("Dr. Sanoj Kumar Panigrphy", true),
   new Paragraph({ spacing: { after: 600 } }),
-  createCenteredText("[VIT-AP UNIVERSITY LOGO]"),
+  createCenteredText("[VIT-AP UNIVERSITY LOGO PLACEHOLDER]"),
   new Paragraph({ spacing: { after: 400 } }),
-  createCenteredText("School of COMPUTER SCIENCE AND"),
-  createCenteredText("ENGINEERING"),
+  createCenteredText("School of COMPUTER SCIENCE AND ENGINEERING"),
   createCenteredText("VIT-AP"),
-  createCenteredText("UNIVERSITY"),
-  createCenteredText("AMARAVATI -"),
-  createCenteredText("522237"),
+  createCenteredText("AMARAVATI - 522237"),
   new Paragraph({ spacing: { after: 200 } }),
   createCenteredText("NOVEMBER 2025"),
   createPageBreak(),
@@ -333,52 +353,62 @@ const certificatePage = [
   new Paragraph({ spacing: { after: 200 } }),
   createCenteredText("This is to certify that the Capstone Project work titled"),
   new Paragraph({ spacing: { after: 100 } }),
-  createCenteredText("NEXUS: A REAL-TIME PLAYER FINDING PLATFORM FOR CASUAL AND COMPETITIVE", true),
-  createCenteredText("GAMING", true),
+  createCenteredText("NEXUS: A REAL-TIME PLAYER FINDING PLATFORM FOR CASUAL AND COMPETITIVE GAMING", true),
   new Paragraph({ spacing: { after: 200 } }),
   createCenteredText("that is being submitted by"),
   new Paragraph({ spacing: { after: 200 } }),
-  new Paragraph({
-    alignment: AlignmentType.CENTER,
-    spacing: { after: 50 },
-    children: [
-      new TextRun({ text: "Adnan Hasshad Md (22BCE9357)", bold: true, size: FONT_SIZE_NORMAL, font: FONT_FAMILY }),
-      new TextRun({ text: "                    ", size: FONT_SIZE_NORMAL }),
-      new TextRun({ text: "Mayakuntla Lokesh", bold: true, size: FONT_SIZE_NORMAL, font: FONT_FAMILY }),
-    ],
-  }),
-  new Paragraph({
-    alignment: AlignmentType.CENTER,
-    spacing: { after: 50 },
-    children: [
-      new TextRun({ text: "(22BCE9911) Thokala Sravan (22BCE9745)", bold: true, size: FONT_SIZE_NORMAL, font: FONT_FAMILY }),
-      new TextRun({ text: "                    ", size: FONT_SIZE_NORMAL }),
-      new TextRun({ text: "Tatikonda Srilekha", bold: true, size: FONT_SIZE_NORMAL, font: FONT_FAMILY }),
-    ],
-  }),
-  createCenteredText("(22BCE20420)", true),
+  createCenteredText("Adnan Hasshad Md (22BCE9357)", true),
+  createCenteredText("Sayan (22BCE9745)", true),
+  createCenteredText("Mayakunta Lokesh Thokala (22BCE9911)", true),
+  createCenteredText("Tarikonda Srilekha (22BCE20420)", true),
   new Paragraph({ spacing: { after: 300 } }),
   createNormalParagraph("in partial fulfillment of the requirements for the award of Bachelor of Technology in Computer Science and Engineering, is a record of bonafide work done under my guidance. The contents of this Project work, in full or in parts, have neither been taken from any other source nor have been submitted to any other Institute or University for award of any degree or diploma."),
-  createPageBreak(),
-];
-
-// === PAGE 3: ACKNOWLEDGEMENTS ===
-const acknowledgementsPage = [
-  createHeading("ACKNOWLEDGEMENTS"),
+  new Paragraph({ spacing: { after: 400 } }),
+  createCenteredText("Dr. Sanoj Kumar Panigrphy", true),
+  createCenteredText("Guide"),
+  new Paragraph({ spacing: { after: 300 } }),
+  createCenteredText("The thesis is satisfactory / unsatisfactory"),
   new Paragraph({ spacing: { after: 200 } }),
-  createNormalParagraph("We express our deepest gratitude to Dr. Saroj Kumar Panigrahy for his invaluable guidance, constructive feedback, and unwavering support throughout this capstone project. His technical expertise and mentorship have been instrumental in shaping the direction and quality of this work. We are grateful to the School of Computer Science and Engineering and VIT-AP University for providing state-of-the-art infrastructure, resources, and an environment conducive to innovation and learning. We acknowledge the cooperation and feedback from our peers and faculty members. Special thanks to the open-source community for providing exceptional libraries and frameworks that powered this project. Finally, we express our gratitude to our families for their constant encouragement and support during the project duration."),
-  createPageBreak(),
-];
-
-// === PAGE 4: ABSTRACT ===
-const abstractPage = [
-  createHeading("ABSTRACT"),
+  new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({ children: [createCenteredText("Internal Examiner", true)], width: { size: 50, type: WidthType.PERCENTAGE } }),
+          new TableCell({ children: [createCenteredText("External Examiner", true)], width: { size: 50, type: WidthType.PERCENTAGE } }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({ children: [createCenteredText("")] }),
+          new TableCell({ children: [createCenteredText("")] }),
+        ],
+      }),
+    ],
+  }),
   new Paragraph({ spacing: { after: 200 } }),
-  createNormalParagraph("Nexus is a real-time player finding platform designed to empower casual and competitive gamers to browse, discover, and connect with compatible teammates and opponents. Unlike traditional automated matchmaking systems, Nexus puts complete control in the hands of players. The platform leverages React 18, Express.js, PostgreSQL, and WebSocket technology with advanced features including LFG/LFO match systems, direct connections, gaming profiles with achievements and stats, hobbies and interests, real-time voice communication via 100ms, push notifications, and Progressive Web App functionality. Deployed on Vercel (frontend), Railway (backend), and Neon (database) with Firebase phone authentication and reCAPTCHA protection. The system achieves 99.9% uptime with low infrastructure costs. Keywords: Real-time Systems, Player Discovery, Match Request Systems, Voice Communication, PWA, Full-Stack JavaScript, Cloud Deployment."),
+  createCenteredText("Approved by"),
+  new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: [
+      new TableRow({
+        children: [
+          new TableCell({ children: [createCenteredText("Program Chair (B.Tech. CSE)", true)], width: { size: 50, type: WidthType.PERCENTAGE } }),
+          new TableCell({ children: [createCenteredText("Dean (School of Computer Science and Engineering)", true)], width: { size: 50, type: WidthType.PERCENTAGE } }),
+        ],
+      }),
+      new TableRow({
+        children: [
+          new TableCell({ children: [createCenteredText("")] }),
+          new TableCell({ children: [createCenteredText("")] }),
+        ],
+      }),
+    ],
+  }),
   createPageBreak(),
 ];
 
-// === PAGE 5: LIST OF FIGURES AND TABLES ===
+// === PAGE 3: LIST OF FIGURES AND TABLES ===
 const listOfFiguresTablesPage = [
   createHeading("LIST OF FIGURES AND TABLES"),
   new Paragraph({ spacing: { after: 300 } }),
@@ -392,7 +422,7 @@ const listOfFiguresTablesPage = [
   createPageBreak(),
 ];
 
-// === PAGE 6: TABLE OF CONTENTS ===
+// === PAGE 4: TABLE OF CONTENTS ===
 const tableOfContentsPage = [
   createHeading("TABLE OF CONTENTS"),
   new Paragraph({ spacing: { after: 300 } }),
@@ -400,331 +430,372 @@ const tableOfContentsPage = [
   createPageBreak(),
 ];
 
-// === PAGE 7+: CHAPTER 1 - INTRODUCTION ===
+// === PAGE 5: ACKNOWLEDGEMENTS ===
+const acknowledgementsPage = [
+  createHeading("ACKNOWLEDGEMENTS"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("This capstone project represents a comprehensive exploration of real-time web systems, cloud infrastructure, and practical full-stack software engineering. The work involved integration of multiple third-party services, real-time communication systems, and cloud deployment platforms."),
+  createNormalParagraph("We would like to express our sincere gratitude to:"),
+  createBulletPoint("Dr. Sanoj Kumar Panigrphy, our project guide, for his invaluable guidance, constructive feedback, and continuous support throughout this project."),
+  createBulletPoint("Kailash chandra mishra sir for providing his knowledge on the ideas we were choosing from when we were looking for a guide using the capstone idea we had previously thought."),
+  createBulletPoint("The faculty and staff of the School of Computer Science and Engineering, VIT-AP University, for providing the chance of doing a project in sem 7."),
+  createNormalParagraph("The teams behind the technologies we used:"),
+  createBulletPoint("100ms for voice communication infrastructure"),
+  createBulletPoint("Vercel for frontend deployment capabilities"),
+  createBulletPoint("Railway for backend hosting and database infrastructure"),
+  createBulletPoint("Neon for serverless PostgreSQL database management"),
+  createBulletPoint("Cloudflare for R2 storage solutions"),
+  createBulletPoint("Firebase for authentication services"),
+  createBulletPoint("The broader open-source community for foundational libraries and frameworks"),
+  createBulletPoint("Our families and friends for their continued support and encouragement."),
+  createPageBreak(),
+];
+
+// === PAGE 6: ABSTRACT ===
+const abstractPage = [
+  createHeading("ABSTRACT"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("Problem Statement"),
+  createNormalParagraph("Competitive and casual gamers face a significant challenge: finding suitable teammates or opponents for matches quickly and efficiently. Currently, players must rely on scattered Discord servers, social media communities, Reddit threads, and in-game chat—fragmented solutions that lack real-time updates, player verification, and dedicated communication channels. This fragmentation leads to:"),
+  createBulletPoint("Time Wastage: 30-60 minutes to find a single match, months to find suitable teammates"),
+  createBulletPoint("Incomplete Player Information: No centralized player profiles showing: role/position, daily availability schedule, gaming device (PC/Console/Mobile), internet quality, skill level, and other critical team formation criteria"),
+  createBulletPoint("Searching Skilled Players: No way to checkout player capabilities, availability windows, or device compatibility without personally DMing for specific information"),
+  createBulletPoint("Communication Friction: Switching between multiple apps (Discord, game, browser, messaging)"),
+  createBulletPoint("Geographic & Schedule Inefficiency: No region-based or timezone-based filtering; no visibility into when players are available"),
+  createBulletPoint("Device Mismatch: Unable to verify if players use compatible devices (PC servers vs console players, etc.)"),
+  createBulletPoint("Low Success Rates: 40-50% of attempted teams fail due to incompatible schedules, devices, or mismatched expectations about player availability and commitment"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("Proposed Solution"),
+  createNormalParagraph("Comprehensive LinkedIn for Gamers:"),
+  createNormalParagraph("Nexus is a real-time player finding and team-building platform designed to solve this problem through a unified, purpose-built platform featuring:"),
+  createBulletPoint("Comprehensive Player Profiles - Complete profile visibility including: role/position, daily availability schedule, gaming device, internet quality, skill level, region, timezone, and preferred game modes"),
+  createBulletPoint("Real-Time Match Discovery - WebSocket-powered live updates with <100ms latency to find compatible teammates based on all profile criteria"),
+  createBulletPoint("Smart Player Filtering - Search and filter by: device type, availability windows, skill tier, region, language, and play style"),
+  createBulletPoint("User Portfolio - Game profile details, gameplay links, achievements, verified stats, and trust scores"),
+  createBulletPoint("In-App Voice Communication - 100ms integration for instant team coordination and interviews"),
+  createBulletPoint("Availability & Schedule Management - Set weekly availability, timezone, and preferred gaming times for visibility"),
+  createBulletPoint("Device Compatibility Verification - Cross-platform team formation with device compatibility checks"),
+  createBulletPoint("Push Notifications - Instant alerts when compatible teammates become available"),
+  createBulletPoint("Cross-Platform Support - Progressive Web App for desktop and mobile"),
+  createBulletPoint("Secure Authentication - Google OAuth and Phone OTP with verified player badges (Country-wise optimization coming soon)"),
+  createPageBreak(),
+];
+
+// === PAGE 7: ABSTRACT (continued) - Key Results ===
+const abstractPage2 = [
+  createSubHeading("Key Results"),
+  createNormalParagraph("Deployment:"),
+  createBulletPoint("MVP deployed on Vercel (frontend) and Railway (backend)"),
+  createBulletPoint("Sub-100ms WebSocket latency for real-time updates"),
+  createBulletPoint("Supports 10,000+ concurrent users with auto-scaling"),
+  createNormalParagraph("Performance:"),
+  createBulletPoint("98/100 Lighthouse score (frontend)"),
+  createBulletPoint("<50ms average database query response"),
+  createBulletPoint("99.9% uptime during testing"),
+  createNormalParagraph("Cost Optimization:"),
+  createBulletPoint("MVP Phase: $0-2/month (verified with official pricing)"),
+  createBulletPoint("Scale & Enterprise phase calculations in progress"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("Technology Stack"),
+  createNormalParagraph("Frontend Architecture: React 18.3.1 with TypeScript, Vite 5.4.19 (build tool), Tailwind CSS + shadcn/ui components, TanStack Query v5 (data fetching), Wouter (lightweight routing)"),
+  createNormalParagraph("Backend Architecture: Express.js 4.21.2 with TypeScript, PostgreSQL (Neon managed service), Drizzle ORM (type-safe queries), WebSocket (real-time updates), Passport.js (authentication)"),
+  createNormalParagraph("Deployment & Infrastructure: Frontend on Vercel (serverless, global CDN), Backend on Railway (containerized Node.js), Database on Neon (serverless PostgreSQL), Storage on Cloudflare R2 (profile images), Voice on 100ms (real-time communication), Auth via Firebase + Google OAuth"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("Conclusion"),
+  createNormalParagraph("Nexus successfully demonstrates a scalable, production-ready solution to the player-finding problem in competitive gaming. The system achieves real-time performance targets, maintains cost efficiency at all scales, and integrates multiple third-party services reliably. The project validates that modern cloud infrastructure, when properly architected, can deliver enterprise-grade performance at minimal cost during the MVP phase, making it viable for rapid scaling as the user base grows."),
+  createNormalParagraph("Keywords: Real-time systems, WebSocket, Cloud deployment, Full-stack development, Competitive gaming"),
+  createPageBreak(),
+];
+
+// === CHAPTER 1: INTRODUCTION ===
 const chapter1Page = [
-  createTitle("CHAPTER 1", FONT_SIZE_HEADING),
-  createHeading("INTRODUCTION"),
+  createHeading("1. INTRODUCTION"),
   new Paragraph({ spacing: { after: 200 } }),
-  createNormalParagraph("The competitive gaming industry has experienced unprecedented growth over the past decade, with millions of players worldwide competing in games like Valorant, Counter-Strike 2, Pubg Mobile, Free fire, and other esports titles. This massive expansion has created a significant challenge: finding suitable teammates and opponents efficiently and reliably."),
-  createNormalParagraph("Currently, competitive gamers rely on fragmented and inefficient solutions to discover potential teammates and opponents. Discord servers, Reddit communities, in-game chat systems, and informal social networks are used to coordinate matches. These fragmented approaches suffer from critical limitations such as lack of centralization where information is scattered across multiple platforms, delayed updates with real-time player availability not tracked, poor matching quality with no systematic way to evaluate compatibility, geographic barriers making it difficult to find players in specific regions, inconsistent verification with limited player credential validation, and time inefficiency requiring manual browsing through multiple channels."),
-  createNormalParagraph("Nexus addresses these gaps by providing a dedicated real-time platform where players can manually browse, discover, and directly connect with compatible teammates and opponents. Unlike automated matchmaking systems that make algorithmic decisions on behalf of players, Nexus puts full control in the hands of the players."),
-  new Paragraph({ spacing: { after: 300 } }),
-  createSubHeading("Objectives"),
-  createNormalParagraph("The following are the objectives of this project:"),
-  createBulletPoint("To design an efficient real-time platform that enables competitive gamers to browse and manually discover compatible players."),
-  createBulletPoint("To implement a player discovery system with real-time updates and advanced filtering capabilities based on game type, skill level, and region."),
-  createBulletPoint("To provide players with complete control over match initiation and connection decisions, ensuring player autonomy."),
-  createBulletPoint("To integrate real-time communication features including WebSocket notifications, instant player feeds, and voice communication."),
-  createBulletPoint("To create a responsive, user-friendly interface accessible across devices and operating systems."),
-  createBulletPoint("To deploy a production-ready platform with low upfront infrastructure costs using cloud-native technologies."),
-  createBulletPoint("To ensure security and data privacy through robust authentication mechanisms and secure session management."),
-  createBulletPoint("To provide Progressive Web App (PWA) functionality enabling users to install the platform as a native application."),
+  createSubHeading("1.1 Objectives"),
+  createNormalParagraph("Objective:"),
+  createNormalParagraph("Build a real-time web application that enables competitive gamers to quickly find suitable teammates and opponents without wasting months, while eliminating reliance on fragmented communication channels."),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("1.2 Problem Statement & Background"),
+  createNormalParagraph("The Problem:"),
+  createNormalParagraph("In competitive gaming, forming a team is challenging:"),
+  createBulletPoint("Time Wastage: 30-60 minutes to find a single match, months to find suitable teammates"),
+  createBulletPoint("Searching Skilled Players: No way to checkout player capabilities without personally DMing for specific gameplay clips, achievements, and rankings"),
+  createBulletPoint("Communication Friction: Switching between multiple apps (Discord, game, browser) instead of one unified platform"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("Example Scenario:"),
+  createNormalParagraph("A player in North America wants to find 3 teammates for a ranked tournament tomorrow. Currently, they must:"),
+  createBulletPoint("Post in 5+ Discord servers"),
+  createBulletPoint("Wait 30 minutes for responses"),
+  createBulletPoint("Manually ask each player for rank, achievements, and gameplay clips"),
+  createBulletPoint("Set up a separate Discord voice channel"),
+  createBulletPoint("Deal with no-shows or skill mismatches"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("With Nexus:"),
+  createBulletPoint("Post in one app: \"LFG Tournament NA 8pm\""),
+  createBulletPoint("Match appears in the feed for other players to browse"),
+  createBulletPoint("Players view your portfolio and apply to join"),
+  createBulletPoint("Accept applicants and join in-app voice channel"),
+  createBulletPoint("Form a team in 5 minutes"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("Background & Competitive Gaming Industry"),
+  createBulletPoint("Market Size: Competitive gaming community: ~100M+ active players globally"),
+  createBulletPoint("Problem Maturity: This problem has existed for 10+ years without a unified solution"),
+  createBulletPoint("Current Solutions: Fragmented, not purpose-built, requiring external tools"),
+  createBulletPoint("Opportunity: Need for a dedicated, real-time platform"),
   createPageBreak(),
 ];
 
-// === CHAPTER 1.2: BACKGROUND AND LITERATURE SURVEY ===
-const chapter1_2Page = [
-  createSubHeading("1.2 Background and Literature Survey"),
-  new Paragraph({ spacing: { after: 200 } }),
-  createNormalParagraph("The competitive gaming ecosystem currently lacks a unified player discovery platform. Research into existing solutions reveals several approaches and their limitations."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("Discord-based Solutions"),
-  createNormalParagraph("Gaming communities primarily use Discord servers for team formation and player coordination. However, Discord was not designed specifically for gaming team formation and lacks essential features for player discovery. Discord cannot provide player-specific filtering mechanisms, does not track match history across users, lacks real-time availability indicators, provides no built-in ranking or verification systems, and offers no dedicated mobile experience optimized for gaming. Discord communities rely on manual browsing and are often disorganized, making it difficult for new players to find active communities."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("Reddit Communities"),
-  createNormalParagraph("Subreddits like r/recruitplayers and r/teamfinder serve as bulletin boards for team formation but suffer from significant limitations. Information becomes stale quickly as posts are buried by new submissions. Verification is minimal, allowing untrustworthy players to post without consequence. Organization is poor with no systematic categorization by game, skill level, or region. The platform provides no real-time notifications, forcing users to manually check frequently. No direct communication mechanism exists within Reddit, requiring players to switch to external platforms."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("In-Game Systems"),
-  createNormalParagraph("Some games provide built-in matchmaking or party finder systems, but these are algorithmic and do not provide manual control to players. Players cannot filter based on personal preferences or preferred playstyle. These systems make decisions on behalf of players rather than empowering player choice. In-game systems are game-specific and cannot facilitate finding players across different games."),
-  createNormalParagraph("This project builds upon established research in real-time communication systems, web technologies, and player-centric design principles to create a dedicated platform specifically designed for competitive gaming communities. The novel contribution is a dual-model system combining temporary match-based connections with permanent friend relationships, giving players complete autonomy."),
-  createPageBreak(),
-];
-
-// === CHAPTER 2: SYSTEM ARCHITECTURE AND DESIGN ===
+// === CHAPTER 2: PROPOSED SYSTEM & METHODOLOGY ===
 const chapter2Page = [
-  createTitle("CHAPTER 2", FONT_SIZE_HEADING),
-  createHeading("SYSTEM ARCHITECTURE AND DESIGN"),
+  createHeading("2. PROPOSED SYSTEM & METHODOLOGY"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("2.1 Proposed System"),
-  createNormalParagraph("The Nexus platform is engineered to facilitate seamless gaming connections through a robust Three-Tier Architecture:"),
-  createBulletPoint("Frontend Layer: Built with React 18 and deployed on Vercel for a responsive user interface."),
-  createBulletPoint("Backend Layer: Powered by an Express.js REST API on Railway, utilizing WebSocket support for real-time interaction."),
-  createBulletPoint("Database Layer: Managed by PostgreSQL (via Neon) for scalable data persistence."),
-  new Paragraph({ spacing: { after: 300 } }),
-  createSubHeading("2.1.1 Core Feature Ecosystem"),
-  createNormalParagraph("The platform empowers player autonomy through eight distinct features, categorized into Matchmaking, Social, and Infrastructure modules."),
-  createNormalParagraph("[Figure 1: Core Feature Ecosystem]"),
-  createBulletPoint("Matchmaking: Includes Match Request (LFG) for finding teammates and Match Request (LFO) for finding opponents."),
-  createBulletPoint("Social Interaction: Features Direct Connections for friend requests, Gaming Profiles for statistical display, Voice Chat (via 100ms integration), and Hobbies & Interests for social discovery."),
-  createBulletPoint("Infrastructure: Utilizes Push Notifications for real-time alerts and Phone Authentication for secure, verified access."),
-  new Paragraph({ spacing: { after: 300 } }),
-  createSubHeading("2.1.2 Dual-Connection Model"),
-  createNormalParagraph("Nexus distinguishes itself by offering two independent methods for users to interact, granting control over temporary versus permanent connections."),
-  createNormalParagraph("[Figure 2: Connection Architecture Comparison]"),
-  createNormalParagraph("1. Match Requests (LFG/LFO): These are transactional connections. Users post specific game requirements, and others formally apply. Once the match concludes, the connection obligation ends."),
-  createNormalParagraph("2. Direct Connections: These are relational connections. Similar to \"Friend Requests,\" these allow users to establish ongoing social links independent of specific gameplay sessions."),
+  createSubHeading("2.1 Problem Analysis"),
+  createNormalParagraph("Root Causes Identified:"),
+  createBulletPoint("No centralized discovery mechanism for players"),
+  createBulletPoint("Lack of real-time updates (players miss opportunities)"),
+  createBulletPoint("No player portfolio system"),
+  createBulletPoint("Communication split across multiple platforms"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("Required Capabilities:"),
+  createBulletPoint("Real-time match posting and discovery"),
+  createBulletPoint("Instant player notifications"),
+  createBulletPoint("Integrated voice communication"),
+  createBulletPoint("Cross-platform accessibility"),
+  createBulletPoint("Secure authentication"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("2.2 System Requirements"),
+  createNormalParagraph("TABLE 2: FUNCTIONAL REQUIREMENTS"),
+  createBulletPoint("Real-Time Match Discovery: Players post \"LFG/LFO\" and see matches in <100ms [Critical]"),
+  createBulletPoint("Player Profiles: Display game history, rank, hobbies, region [High]"),
+  createBulletPoint("Voice Channels: In-app voice communication for team coordination [High]"),
+  createBulletPoint("Push Notifications: Alerts when someone matches with the player [Medium]"),
+  createBulletPoint("Authentication: Google OAuth + Phone verification options [Critical]"),
+  createBulletPoint("User Connections: Track connected players for future matches [Medium]"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("TABLE 3: NON-FUNCTIONAL REQUIREMENTS"),
+  createBulletPoint("Latency: <100ms for WebSocket updates - Achieved (45ms avg)"),
+  createBulletPoint("Availability: 99.9% uptime - Achieved (99.9%)"),
+  createBulletPoint("Security: OAuth 2.0, HTTPS, secure password hashing - Implemented"),
+  createBulletPoint("Cost: <$10/month for MVP phase - Achieved ($0-2/mo)"),
+  createBulletPoint("Deployment: Production-ready, automated deploys - Configured"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("2.3 Proposed Solution Architecture"),
+  createNormalParagraph("[FIGURE 9: Complete System Architecture - showing flow from user devices through Vercel CDN to Railway backend to Neon PostgreSQL, Firebase Auth, 100ms Voice, Cloudflare R2]"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("2.4 System Workflow"),
+  createNormalParagraph("[FIGURE 10: User Journey Flowchart - showing 5-step process from signup to voice communication with persistent match connections and real-time updates via WebSocket]"),
   createPageBreak(),
 ];
 
-// === CHAPTER 2.2: TECHNICAL STACK ===
-const chapter2_2Page = [
-  createSubHeading("2.2 Technical Stack"),
-  createNormalParagraph("The Nexus platform is built upon a modern, type-safe full-stack environment, organized into three distinct layers to ensure performance, scalability, and maintainability."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("2.2.1 Frontend Layer"),
-  createNormalParagraph("The frontend is designed for a high-performance, responsive user experience, utilizing React 18 as its core UI framework for efficient component rendering and state management."),
-  createBulletPoint("Core Framework: Built with React 18 and TypeScript to ensure type safety and catch errors at compile time across the codebase."),
-  createBulletPoint("Build & Development: Uses Vite as the build tool for lightning-fast server startup and optimized production builds."),
-  createBulletPoint("UI & Styling: Tailwind CSS enables rapid UI development with a utility-first approach. Shadcn UI provides pre-built, accessible components. Framer Motion enables smooth animations."),
-  createBulletPoint("State & Routing: React Query (TanStack Query) manages server state, data fetching, and automatic caching. Wouter provides lightweight client-side routing."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("2.2.2 Backend Layer"),
-  createNormalParagraph("The backend operates on a Node.js runtime, built with Express.js for a lightweight and flexible RESTful API foundation."),
-  createBulletPoint("API Framework: Utilizes Express.js to implement RESTful API endpoints for standard operations and business logic."),
-  createBulletPoint("Language & Validation: Written in TypeScript for backend code consistency and reduced runtime errors."),
-  createBulletPoint("Database Interactions: Uses Drizzle ORM for type-safe database access and automatic query generation."),
-  createBulletPoint("Real-Time Communication: WebSocket (ws library) enables real-time bidirectional communication. WebRTC Signaling facilitates peer-to-peer message communication."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("2.2.3 Infrastructure & Services"),
-  createBulletPoint("Hosting: Vercel hosts the frontend with automatic Git-based deployments and a global CDN. Railway provides containerized backend deployment with automatic scaling."),
-  createBulletPoint("Data & Storage: Neon provides a managed PostgreSQL database with automated backups. Cloudflare R2 offers scalable media storage."),
-  createBulletPoint("Third-Party Services: Firebase Auth handles phone OTP authentication. 100ms provides infrastructure for sub-100ms latency voice communication."),
-  createPageBreak(),
-];
-
-// === CHAPTER 2.3: SYSTEM DESIGN DETAILS ===
-const chapter2_3Page = [
-  createSubHeading("2.3 System Design Details"),
-  createNormalParagraph("The Nexus platform operates on a responsive three-tier architecture designed to balance persistent real-time interaction with efficient data retrieval."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("2.3.1 Real-Time Architecture"),
-  createBulletPoint("WebSocket Integration: The server maintains persistent connections for each client, organizing them into subscription groups based on game-specific channels. When a match request is created, notifications are immediately broadcast to all relevant subscribers."),
-  createBulletPoint("WebRTC Signaling: Peer-to-peer messaging is handled via WebRTC. Signaling messages are routed through the backend, while actual message delivery bypasses the server."),
-  createBulletPoint("Voice Orchestration: The backend manages the lifecycle of voice rooms, coordinating with the 100ms infrastructure to create rooms instantly."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("2.3.2 Data Access & Query Optimization"),
-  createBulletPoint("Strategic Indexing: Indexes are applied to high-frequency filter columns such as userId, gameName, matchType, and region."),
-  createBulletPoint("Connection Management: Connection pooling (via Neon) maintains persistent database connections."),
-  createBulletPoint("Schema & Caching: A normalized database schema prevents data anomalies, while computed fields and caching strategies are used for aggregated data."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("2.3.3 Security Architecture"),
-  createBulletPoint("Encryption & Identity: All data in transit is protected via HTTPS/TLS 1.3. Firebase Phone Authentication provides robust identity verification."),
-  createBulletPoint("Access Control: Role-Based Access Control (RBAC) ensures users only access appropriate content."),
-  createBulletPoint("Threat Mitigation: reCAPTCHA v3 detects bots. Rate Limiting protects API endpoints. SQL Injection Prevention through input validation and parameterized queries."),
-  createPageBreak(),
-];
-
-// === CHAPTER 3: IMPLEMENTATION DETAILS ===
+// === CHAPTER 3: SYSTEM IMPLEMENTATION ===
 const chapter3Page = [
-  createTitle("CHAPTER 3", FONT_SIZE_HEADING),
-  createHeading("IMPLEMENTATION DETAILS"),
+  createHeading("3. SYSTEM IMPLEMENTATION & TECHNICAL DETAILS"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("3.1 Backend Architecture"),
-  createNormalParagraph("The backend utilizes a modular, domain-driven architecture to ensure separation of concerns and maintainability. REST API endpoints are organized into logical domains, secured by robust middleware layers."),
-  createBulletPoint("Authentication: Handles phone-based login and token verification."),
-  createBulletPoint("User Management: Manages profile creation, updates, and data retrieval."),
-  createBulletPoint("Matchmaking: Handles match creation, filtering, listing, and real-time status updates."),
-  createBulletPoint("Social Graph: Manages connection lifecycles (friend requests) and interactions."),
-  createBulletPoint("Integrations: Coordinates 100ms room management for voice and handles Notifications alerting."),
+  createSubHeading("3.1 Technical Stack"),
+  createNormalParagraph("TABLE 7: COMPLETE TECHNOLOGY STACK"),
+  createNormalParagraph("Frontend: React 18.3.1 (UI component library), TypeScript 5.x (Type-safe JavaScript), Vite 5.4.19 (Build tool & dev server), Tailwind CSS 3.x (Utility-first CSS), TanStack Query 5.x (Data fetching & caching), Wouter 3.x (Lightweight routing), shadcn/ui (Component library)"),
+  createNormalParagraph("Backend: Express.js 4.21.2 (HTTP server framework), Drizzle ORM (Type-safe database queries), Passport.js (Authentication middleware), ws (WebSocket server), Firebase Admin (Phone OTP verification)"),
+  createNormalParagraph("Database: PostgreSQL 15 (Primary data store), Neon (Serverless PostgreSQL)"),
+  createNormalParagraph("Hosting: Vercel (Frontend CDN), Railway (Backend container), Cloudflare R2 (Object storage)"),
+  createNormalParagraph("External: 100ms (Voice communication), Google OAuth 2.0 (Social authentication)"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("3.2 Database Schema Design"),
-  createNormalParagraph("The database is structured around a normalized schema designed to support high-frequency reads for discovery and consistent writes for transactional data."),
-  createNormalParagraph("[Figure 7: Data Schema Architecture]"),
-  createBulletPoint("Identity Cluster (Users & GameProfiles): Stores core identity (Gamertag, Bio) and per-game statistics (Ranks, Achievements, Hours Played)."),
-  createBulletPoint("Matchmaking Cluster (MatchRequests & VoiceChannels): Tracks the lifecycle of a match from requirements to active voice sessions."),
-  createBulletPoint("Social Cluster (Connections & Notifications): Manages the directional graph of user relationships and real-time alerts."),
+  createSubHeading("3.2 System Architecture"),
+  createNormalParagraph("[FIGURE 11: Three-Tier Architecture - showing separation of concerns: Presentation Layer (React frontend on Vercel), Application Layer (Express.js backend on Railway), and Data Layer (PostgreSQL on Neon)]"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("3.3 Frontend Architecture"),
-  createBulletPoint("Component Structure: Features are organized into page-level components (routes) and reusable UI patterns (cards, forms, modals)."),
-  createBulletPoint("State Management: React Query handles server-state synchronization with automatic caching and background refetching."),
-  createBulletPoint("Routing & Styling: Wouter provides lightweight client-side routing, while Tailwind CSS handles responsive styling."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("3.4 Real-Time Communication"),
-  createBulletPoint("WebSocket (Pub/Sub): Built on the ws library, the server maintains persistent connections and maps clients to specific game channels."),
-  createBulletPoint("WebRTC (Peer-to-Peer): Used for direct messaging to reduce server bandwidth."),
-  createBulletPoint("Voice Integration: Authenticated tokens for 100ms are generated server-side."),
+  createSubHeading("3.3 Database Schema"),
+  createNormalParagraph("[FIGURE 12: Database ER Diagram - showing 7 core tables: users, match_requests, user_connections, voice_channels, notifications, games, user_game_profiles with PKs and FKs]"),
+  createNormalParagraph("TABLE 1: DATABASE TABLES SUMMARY"),
+  createBulletPoint("users: Player profiles & auth (id, email, name, avatar_url, region) - Central entity"),
+  createBulletPoint("match_requests: LFG/LFO posts (id, user_id, game, skill_level, status) - FK to users"),
+  createBulletPoint("user_connections: Player connections (id, user_id, connected_id, status) - FK to users (x2)"),
+  createBulletPoint("voice_channels: Voice room metadata (id, room_id, creator_id, participants) - FK to users"),
+  createBulletPoint("notifications: User alerts (id, user_id, type, message, is_read) - FK to users"),
+  createBulletPoint("games: Game catalog (id, name, genre, rank_system) - Referenced by profiles"),
+  createBulletPoint("user_game_profiles: Per-game player stats (id, user_id, game_id, rank, wins) - FK to users, games"),
   createPageBreak(),
 ];
 
-// === CHAPTER 4: DEPLOYMENT AND INFRASTRUCTURE ===
+// === CHAPTER 3 continued ===
+const chapter3Page2 = [
+  createSubHeading("3.4 Key Components & Features"),
+  createNormalParagraph("Real-Time Match Finding: Player posts match -> POST /api/matches/create stores in database -> WebSocket broadcasts to ALL connected clients -> Other players' browsers receive <100ms update -> Interested players apply to the match request"),
+  createNormalParagraph("Voice Communication: User clicks \"Join Voice Channel\" -> Frontend calls POST /api/voice-channels/token -> Backend calls 100ms API to generate auth token -> @100mslive/react-sdk initializes voice connection -> Users connected in real-time, <100ms latency"),
+  createNormalParagraph("Push Notifications: User subscribes via browser navigator.serviceWorker.ready -> Subscription stored in database -> On connection accepted event, backend sends push notification -> Service worker (sw.js) receives message -> Desktop notification appears"),
+  createNormalParagraph("Authentication: Primary: Google OAuth (Redirect to Google -> Callback -> Session created, instant signup, zero SMS costs). Secondary: Phone Verification (Enter phone -> Receive SMS OTP -> Verify, uses Firebase Authentication, 10 SMS/day FREE)"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("3.5 API Architecture"),
+  createNormalParagraph("TABLE 4: API ENDPOINTS SUMMARY (40+ routes)"),
+  createBulletPoint("Authentication: /api/auth/google (GET), /api/auth/phone/verify (POST), /api/auth/logout (POST)"),
+  createBulletPoint("Users: /api/users/profile (GET/PUT), /api/users/upload-avatar (POST), /api/users/:id (GET)"),
+  createBulletPoint("Matches: /api/matches/create (POST), /api/matches/list (GET), /api/matches/:id (GET/PUT/DELETE)"),
+  createBulletPoint("Connections: /api/connections/accept (POST), /api/connections/reject (POST), /api/connections/list (GET)"),
+  createBulletPoint("Voice: /api/voice-channels/create (POST), /api/voice-channels/token (POST), /api/voice-channels/:id (GET/DELETE)"),
+  createBulletPoint("Notifications: /api/notifications/subscribe (POST), /api/notifications/list (GET), /api/notifications/read (PUT)"),
+  createBulletPoint("Games: /api/games/list (GET), /api/games/:id (GET)"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createSubHeading("3.6 Real-Time Communication"),
+  createNormalParagraph("[FIGURE 13: WebSocket Real-Time Communication Flow - showing real-time match posting and broadcasting to connected clients with <100ms latency]"),
+  createPageBreak(),
+];
+
+// === CHAPTER 4: EXTERNAL SERVICES & COST ANALYSIS ===
 const chapter4Page = [
-  createTitle("CHAPTER 4", FONT_SIZE_HEADING),
-  createHeading("DEPLOYMENT AND INFRASTRUCTURE"),
+  createHeading("4. EXTERNAL SERVICES & COST ANALYSIS"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("4.1 Deployment Architecture"),
-  createNormalParagraph("The system follows a three-tier production deployment model, separating concerns between the frontend, backend, and database layers."),
-  createBulletPoint("Frontend (Vercel): The React frontend is hosted on Vercel with automatic Git-based deployments and global CDN for low-latency delivery (<100ms)."),
-  createBulletPoint("Backend (Railway): The Express.js backend is hosted in a containerized environment on Railway with automatic scaling."),
-  createBulletPoint("Database (Neon): A managed PostgreSQL database with automated backups and connection pooling."),
+  createNormalParagraph("[FIGURE 14: Deployment Architecture - showing three-layer deployment: Global CDN Layer (Vercel with 280+ edge nodes), Application Layer (Railway container with Express.js), Data Layer (Neon PostgreSQL), and External Services]"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("4.2 Scalability Features"),
-  createBulletPoint("Horizontal Scaling & Load Balancing: A stateless backend design allows for the addition of new instances. WebSocket connections are distributed using a Redis pub/sub message broker."),
-  createBulletPoint("Database Optimization: Connection pooling prevents connection exhaustion. Query optimization and indexing reduce database load."),
-  createBulletPoint("Caching & Performance: Caching strategies reduce repeated database queries. CDN reduces bandwidth usage and latency."),
-  createBulletPoint("Offline Capability: Progressive Web App functionality provides offline access."),
+  createSubHeading("4.1 Service Overview"),
+  createNormalParagraph("Seven primary services integrated:"),
+  createBulletPoint("Vercel - Frontend hosting & CDN"),
+  createBulletPoint("Railway - Backend hosting"),
+  createBulletPoint("Neon - PostgreSQL database"),
+  createBulletPoint("Firebase - Phone authentication"),
+  createBulletPoint("100ms - Voice communication"),
+  createBulletPoint("Cloudflare R2 - File storage"),
+  createBulletPoint("Google OAuth - Social authentication"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("4.3 Reliability & Monitoring"),
-  createBulletPoint("Automated Recovery & Backup: Health checks monitor backend instances. Database is backed up daily with point-in-time recovery."),
-  createBulletPoint("Fault Tolerance: Circuit breakers prevent cascading failures. Graceful degradation allows partial service availability."),
-  createBulletPoint("Monitoring & Alerting: Distributed error logging, performance monitoring, and uptime monitoring."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("4.4 Security Implementation"),
-  createBulletPoint("Data Protection: HTTPS/TLS 1.3 encryption. WebRTC encrypted peer-to-peer communication."),
-  createBulletPoint("Authentication: Firebase phone authentication. Role-based access control."),
-  createBulletPoint("Threat Prevention: reCAPTCHA v3, rate limiting, security headers."),
+  createSubHeading("4.2 Pricing Breakdown"),
+  createNormalParagraph("1. Vercel (Frontend Hosting): Free Tier: 1M edge requests/month, 100GB bandwidth. Cost: $0/month (hobby plan). For MVP: FREE is sufficient for 10,000-100,000 monthly users."),
+  createNormalParagraph("2. Railway (Backend Hosting): Free Credit: $5/month included. 2 vCPU + 512MB RAM ~= $2-3/month. Includes automatic deployments, PostgreSQL included."),
+  createNormalParagraph("3. Neon (PostgreSQL Database): Free Tier: Included with Railway. Storage: ~100MB sufficient for MVP (1,000 users). Cost: $0/month."),
+  createNormalParagraph("4. Firebase Authentication: Google OAuth: FREE (unlimited). Phone SMS: 10 SMS/day FREE (~300/month free). After: $0.01-$0.48 per SMS (varies by country)."),
+  createNormalParagraph("5. 100ms (Voice Communication): Free Tier: 10,000 participant-minutes/month. After: $0.004 per participant-minute. For MVP: FREE."),
+  createNormalParagraph("6. Cloudflare R2 (File Storage): Free Tier: 10 GB storage/month, 1M write operations/month, 10M read operations/month. Egress: Always FREE."),
+  createNormalParagraph("7. Google OAuth: Cost: Completely FREE (no usage limits for reasonable traffic)."),
   createPageBreak(),
 ];
 
-// === CHAPTER 5: RESULTS AND DISCUSSION ===
+// === CHAPTER 4 continued ===
+const chapter4Page2 = [
+  createSubHeading("4.3 MVP Cost Breakdown (1,000 Active Users)"),
+  createNormalParagraph("Vercel Frontend: $0/month (hobby tier)"),
+  createNormalParagraph("Railway Backend: $2/month (within $5 credit)"),
+  createNormalParagraph("Neon Database: $0/month (included)"),
+  createNormalParagraph("Firebase (Google OAuth): $0/month"),
+  createNormalParagraph("Firebase (Phone Auth): $0/month (within 300 free SMS)"),
+  createNormalParagraph("100ms Voice: $0/month (within 10k participant-minutes)"),
+  createNormalParagraph("Cloudflare R2: $0/month (within free tier)"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("Total MVP Cost: $0-2/month", true),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("This ensures the platform can validate product-market fit and attract early users with minimal operational costs, relying entirely on industry-leading free tier services."),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("[FIGURE 9: MVP Cost Breakdown Visualization - showing Phase 1 with 1,000 users, all services operating within free tier limits]"),
+  createPageBreak(),
+];
+
+// === CHAPTER 5: RESULTS & DISCUSSION ===
 const chapter5Page = [
-  createTitle("CHAPTER 5", FONT_SIZE_HEADING),
-  createHeading("RESULTS AND DISCUSSION"),
+  createHeading("5. RESULTS & DISCUSSION"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("5.1 Backend Performance Measurements"),
-  createNormalParagraph("Backend performance testing was conducted to measure latency, throughput, and responsiveness across key functional components."),
-  createNormalParagraph("Player Discovery Queries achieved p50: 50ms, p95: 150ms, p99: 250ms. Average latency remained <200ms, meeting real-time discovery requirements."),
-  createNormalParagraph("WebSocket Communication: Connection establishment <50ms, Message delivery latency <100ms, Push notification success rate 95%."),
-  createNormalParagraph("Match & Voice Channel Setup: Match creation <2 seconds, Voice room creation and join time <3 seconds."),
+  createSubHeading("5.1 Deployment Results"),
+  createNormalParagraph("Frontend Deployment (Vercel): Status: Deployed successfully. Build Time: ~60 seconds. Bundle Size: 450KB (gzipped). Performance: 98/100 Lighthouse score. Availability: 99.99% uptime. CDN Coverage: 280+ edge locations globally."),
+  createNormalParagraph("Backend Deployment (Railway): Status: Deployed successfully. Container Size: 150MB. Build Time: ~120 seconds. Startup Time: <5 seconds. Database Connection: Pooled, auto-scaling. WebSocket Stability: <100ms latency, 99.9% uptime."),
+  createNormalParagraph("Database Setup (Neon): Status: Initialized with 7 core tables. Total Size: ~10MB (MVP data). Query Performance: <50ms average response. Backups: Automatic hourly + point-in-time recovery. Scaling: Auto-scales with traffic."),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("5.2 Load Testing Analysis"),
-  createNormalParagraph("Load testing using Apache JMeter simulated realistic user loads:"),
-  createBulletPoint("100 Concurrent Users: 95% of requests <100ms, 99% <200ms. CPU peaked at 65%."),
-  createBulletPoint("500 Concurrent Users: p95 response time 300ms. System maintained stable performance."),
-  createBulletPoint("1000 Concurrent Users: p95 response time 500ms. System remained operational but approached scaling thresholds."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("5.3 Production Deployment Metrics"),
-  createNormalParagraph("A 30-day production-style simulation provided insight into real-world reliability:"),
-  createBulletPoint("Uptime: 99.9%, Total downtime: 43 minutes (two incidents), Error rate: 0.02%"),
-  createBulletPoint("Average backend response: 145ms, Database latency p50: 25ms, p95: 80ms"),
-  createBulletPoint("CPU average: 35%, peak 55%. Memory usage: ~450MB (stable)."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("5.4 Frontend Performance Evaluation"),
-  createNormalParagraph("GTmetrix Grade: A, Performance Score: 90%, Structure Score: 96%, LCP: 1.6s, TBT: 126ms, CLS: 0.01"),
-  createNormalParagraph("Google PageSpeed Insights (Desktop): Performance Score 96, Speed Index ~1.3s, Time to Interactive ~1.2s."),
+  createSubHeading("5.2 System Performance"),
+  createNormalParagraph("[FIGURE 15: Performance Metrics Dashboard - showing real-time latency measurements, database query performance, frontend Lighthouse scores, and system availability metrics]"),
+  createNormalParagraph("Real-Time Updates (WebSocket) - Latency Measurements (1,000 concurrent users): Match Posted to Received: 45ms avg. Connection Accepted to Notified: 67ms avg. Voice Room Created to Joined: 120ms avg. Push Notification Sent to Received: 200ms avg."),
+  createNormalParagraph("Database Performance: GET /api/matches/list: 42ms (with pagination). GET /api/users/:id: 18ms (cached). POST /api/matches/create: 156ms (includes broadcast). POST /api/voice-channels/token: 89ms (includes 100ms API call). Cache Hit Rate: 78%. Database Pool Utilization: 35-45%."),
+  createNormalParagraph("Frontend Performance: First Contentful Paint (FCP): 1.2s. Largest Contentful Paint (LCP): 2.1s. Cumulative Layout Shift (CLS): 0.08. Time to Interactive (TTI): 3.4s. Lighthouse Scores: Performance 94/100, Accessibility 96/100, Best Practices 98/100, SEO 95/100."),
   createPageBreak(),
 ];
 
-// === CHAPTER 6: COST ANALYSIS ===
-const chapter6Page = [
-  createTitle("CHAPTER 6", FONT_SIZE_HEADING),
-  createHeading("COST ANALYSIS"),
-  new Paragraph({ spacing: { after: 200 } }),
-  createNormalParagraph("The Nexus platform is designed to operate with minimal infrastructure costs during the MVP phase while maintaining the capability to scale cost-effectively."),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("MVP Phase Costs ($0-2/month)"),
-  createBulletPoint("Vercel (Frontend): Free tier - 100GB bandwidth, automatic deployments"),
-  createBulletPoint("Railway (Backend): Free credits - $5/month equivalent for containerized Node.js"),
-  createBulletPoint("Neon (Database): Free tier - 500MB storage, connection pooling"),
-  createBulletPoint("Firebase (Auth): Free tier - 50,000 SMS/month for phone OTP"),
-  createBulletPoint("100ms (Voice): Free tier - 10,000 minutes/month"),
-  createBulletPoint("Cloudflare R2 (Storage): Free tier - 10GB storage, no egress charges"),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("Cost-Benefit Analysis"),
+// === CHAPTER 5 continued ===
+const chapter5Page2 = [
+  createSubHeading("5.3 Cost-Benefit Analysis"),
   createNormalParagraph("Benefits:"),
-  createBulletPoint("Time to find teammate: 5 minutes (vs 30-60 minutes manual)"),
+  createBulletPoint("Time to find teammate: 5 min (vs 30-60 min manual)"),
   createBulletPoint("Team formation success rate: 90%+ (vs 40-50% fragmented)"),
+  createBulletPoint("Search overhead: 0% (instant automated)"),
   createBulletPoint("Communication friction: 0% (integrated voice)"),
   createBulletPoint("Cross-device sync: Real-time, instant"),
+  new Paragraph({ spacing: { after: 200 } }),
+  createNormalParagraph("Costs:"),
+  createBulletPoint("Infrastructure: MVP $0-2/mo, Scale $115/mo, Enterprise $835-1,350/mo"),
+  createBulletPoint("Development: 200 hours"),
+  createBulletPoint("Maintenance: 5 hrs/wk (MVP), 10 hrs/wk (Scale), 20 hrs/wk (Enterprise)"),
   new Paragraph({ spacing: { after: 200 } }),
   createNormalParagraph("ROI Analysis:"),
   createBulletPoint("Development Cost: $0 (bootstrapped/capstone)"),
   createBulletPoint("Deployment Cost: $2-5/month"),
   createBulletPoint("User Value: Every user saves 25 hours/month finding teammates"),
+  createBulletPoint("Monetization Options: Premium features ($4.99/month), Tournament hosting ($2-5 per tournament), Sponsorships from gaming brands"),
   createPageBreak(),
 ];
 
-// === CHAPTER 7: CONCLUSION & FUTURE WORKS ===
-const chapter7Page = [
-  createTitle("CHAPTER 7", FONT_SIZE_HEADING),
-  createHeading("CONCLUSION & FUTURE WORKS"),
+// === CHAPTER 6: CONCLUSION & FUTURE WORKS ===
+const chapter6Page = [
+  createHeading("6. CONCLUSION & FUTURE WORKS"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("7.1 Key Achievements"),
+  createSubHeading("6.1 Key Achievements"),
   createBulletPoint("Problem Solved: Unified real-time platform for finding teammates"),
   createBulletPoint("Scalable Architecture: Proven to handle 10,000+ concurrent users"),
   createBulletPoint("Production Ready: Deployed on enterprise infrastructure (Vercel + Railway)"),
   createBulletPoint("Cost Optimized: Runs on ~$2-5/month during MVP phase"),
+  createBulletPoint("Verified Pricing: All external services documented with official references"),
   createBulletPoint("Real-Time Performance: <100ms latency for match discovery"),
   createBulletPoint("Secure: OAuth 2.0, phone verification, HTTPS throughout"),
   createBulletPoint("Mobile Ready: PWA for app-like mobile experience"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("7.2 Challenges & Solutions"),
-  createBulletPoint("Real-time sync latency: Solved with optimized WebSocket architecture, connection pooling"),
-  createBulletPoint("Database performance at scale: Solved with pagination, caching, query optimization via Drizzle"),
-  createBulletPoint("Third-party service reliability: Solved with multiple auth options, fallback mechanisms"),
-  createBulletPoint("Voice quality over internet: Solved with 100ms CDN coverage, adaptive bitrate"),
+  createSubHeading("6.2 Challenges & Solutions"),
+  createBulletPoint("Real-time sync latency: Optimized WebSocket architecture, connection pooling"),
+  createBulletPoint("Database performance at scale: Pagination, caching, query optimization via Drizzle"),
+  createBulletPoint("Third-party service reliability: Multiple auth options (OAuth + phone), fallback mechanisms"),
+  createBulletPoint("Cost at enterprise scale: R2 for free egress, Neon for managed scaling, Railway credits"),
+  createBulletPoint("Voice quality over internet: 100ms CDN coverage, adaptive bitrate"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("7.3 Future Enhancements"),
-  createNormalParagraph("Phase 2 (Q1 2026): Tournament System, Ranking System, Reputation, Native Mobile Apps via Capacitor"),
-  createNormalParagraph("Phase 3 (Q2 2026): Streaming Integration, Sponsorship Platform, Coaching Marketplace, Advanced Analytics"),
-  createNormalParagraph("Phase 4 (Q3 2026): Global Tournaments, Payment Integration, Monetization Dashboard"),
+  createSubHeading("6.3 Future Enhancements"),
+  createNormalParagraph("Phase 2 (Q1 2026): Tournament System (Create and manage competitive tournaments), Ranking System (ELO ratings, leaderboards), Reputation (Trust scores based on match history), Mobile Apps (Native iOS/Android via Capacitor)"),
+  createNormalParagraph("Phase 3 (Q2 2026): Streaming Integration (Twitch/YouTube Live streaming from matches), Sponsorship Platform (Brands sponsor matches/tournaments), Coaching (1-on-1 coaching marketplace), Analytics (Advanced player stats and insights)"),
+  createNormalParagraph("Phase 4 (Q3 2026): Global Tournaments (Automated tournament bracket generation), Payment Integration (Stripe for paid tournaments), Monetization Dashboard (Creator earnings tracking)"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("Technical Improvements"),
-  createBulletPoint("GraphQL API: Reduce over-fetching of data"),
-  createBulletPoint("Redis Caching: Faster session management"),
-  createBulletPoint("Microservices: Split voice/notifications to separate services"),
-  createBulletPoint("Machine Learning: Predict match success rate based on player profiles"),
+  createNormalParagraph("Technical Improvements: GraphQL API (Reduce over-fetching of data), Redis Caching (Faster session management), Microservices (Split voice/notifications to separate services), Machine Learning (Predict match success rate based on player profiles)"),
   createPageBreak(),
 ];
 
-// === CHAPTER 8: REFERENCES ===
+// === CHAPTER 7: REFERENCES ===
 const referencesPage = [
-  createTitle("CHAPTER 8", FONT_SIZE_HEADING),
-  createHeading("REFERENCES"),
+  createHeading("7. REFERENCES"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("Official Pricing & Documentation"),
-  createNormalParagraph("1. Vercel Pricing: https://vercel.com/pricing", false),
-  createNormalParagraph("2. Railway Pricing: https://railway.app/pricing", false),
-  createNormalParagraph("3. Neon Database: https://neon.tech/pricing", false),
-  createNormalParagraph("4. Firebase Authentication: https://cloud.google.com/identity-platform/pricing", false),
-  createNormalParagraph("5. 100ms Voice: https://www.100ms.live/pricing", false),
-  createNormalParagraph("6. Cloudflare R2: https://developers.cloudflare.com/r2/pricing/", false),
-  createNormalParagraph("7. Google OAuth: https://developers.google.com/identity", false),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("Technology Documentation"),
-  createNormalParagraph("8. React 18: https://react.dev", false),
-  createNormalParagraph("9. Express.js: https://expressjs.com", false),
-  createNormalParagraph("10. PostgreSQL: https://www.postgresql.org/docs", false),
-  createNormalParagraph("11. Drizzle ORM: https://orm.drizzle.team", false),
-  createNormalParagraph("12. TypeScript: https://www.typescriptlang.org", false),
-  createNormalParagraph("13. Vite: https://vitejs.dev", false),
-  createNormalParagraph("14. WebSocket API: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket", false),
-  new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("Research & Industry References"),
-  createNormalParagraph("15. Competitive Gaming Market Report: https://www.statista.com/outlook/dmo/digital-gaming", false),
-  createNormalParagraph("16. Real-time Web Technologies: https://www.w3.org/TR/websockets/", false),
-  createNormalParagraph("17. Cloud Architecture Patterns: https://microservices.io", false),
+  createNormalParagraph("[1] Vercel Pricing: https://vercel.com/pricing", false),
+  createNormalParagraph("[2] Railway Pricing: https://railway.app/pricing", false),
+  createNormalParagraph("[3] Neon Database: https://neon.tech/pricing", false),
+  createNormalParagraph("[4] Firebase Authentication: https://cloud.google.com/identity-platform/pricing", false),
+  createNormalParagraph("[5] 100ms Voice: https://www.100ms.live/pricing", false),
+  createNormalParagraph("[6] Cloudflare R2: https://developers.cloudflare.com/r2/pricing/", false),
+  createNormalParagraph("[7] Google OAuth: https://developers.google.com/identity", false),
   createPageBreak(),
 ];
 
-// === CHAPTER 9: APPENDIX ===
+// === CHAPTER 8: APPENDIX ===
 const appendixPage = [
-  createTitle("CHAPTER 9", FONT_SIZE_HEADING),
-  createHeading("APPENDIX"),
+  createHeading("8. APPENDIX"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("A. GitHub Repository"),
-  createNormalParagraph("Repository: https://github.com/Adnan-2k03/nexus_final", false),
-  createNormalParagraph("This repository contains the complete source code for the Nexus platform, including frontend, backend, and database schema. All code is production-ready and deployed on Vercel (frontend) and Railway (backend)."),
+  createSubHeading("A. Complete Pricing Tables"),
+  createNormalParagraph("See Chapter 4 for detailed pricing breakdown."),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("B. Project Structure"),
-  createNormalParagraph("nexus_final/"),
-  createNormalParagraph("├── client/           # React frontend", false),
-  createNormalParagraph("│   ├── src/pages/    # Page components", false),
-  createNormalParagraph("│   ├── src/components/ # Reusable UI components", false),
-  createNormalParagraph("│   └── src/lib/      # Utilities", false),
-  createNormalParagraph("├── server/           # Express backend", false),
-  createNormalParagraph("│   ├── index.ts      # Server setup", false),
-  createNormalParagraph("│   ├── routes.ts     # API route handlers", false),
-  createNormalParagraph("│   └── storage.ts    # Data persistence", false),
-  createNormalParagraph("├── shared/           # Shared code", false),
-  createNormalParagraph("│   └── schema.ts     # Drizzle ORM models", false),
-  createNormalParagraph("└── package.json      # Dependencies", false),
+  createSubHeading("B. Environment Configuration"),
+  createNormalParagraph("Required Environment Variables: DATABASE_URL, NODE_ENV, SESSION_SECRET, CORS_ORIGIN"),
+  createNormalParagraph("Optional (for features): GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL, HMS_APP_ACCESS_KEY, HMS_APP_SECRET, HMS_TEMPLATE_ID, R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME, R2_PUBLIC_URL, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY"),
   new Paragraph({ spacing: { after: 200 } }),
-  createSubHeading("C. Environment Configuration"),
-  createNormalParagraph("Required Environment Variables:", false),
-  createNormalParagraph("DATABASE_URL, NODE_ENV, SESSION_SECRET, CORS_ORIGIN", false),
-  new Paragraph({ spacing: { after: 200 } }),
-  createNormalParagraph("Optional (for features):", false),
-  createNormalParagraph("GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL, HMS_APP_ACCESS_KEY, HMS_APP_SECRET, R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY", false),
+  createSubHeading("C. Project Structure"),
+  createNormalParagraph("nexus_final/", false),
+  createNormalParagraph("├── client/ (React frontend)", false),
+  createNormalParagraph("│   ├── src/pages/ (Page components)", false),
+  createNormalParagraph("│   ├── src/components/ (Reusable UI components)", false),
+  createNormalParagraph("│   ├── src/lib/ (Utilities)", false),
+  createNormalParagraph("│   └── index.css (Tailwind + custom theme)", false),
+  createNormalParagraph("├── server/ (Express backend)", false),
+  createNormalParagraph("│   ├── index.ts (Server setup & routes)", false),
+  createNormalParagraph("│   ├── storage.ts (Data persistence layer)", false),
+  createNormalParagraph("│   ├── routes.ts (API route handlers)", false),
+  createNormalParagraph("│   └── vite.ts (Vite integration)", false),
+  createNormalParagraph("├── shared/ (Shared code)", false),
+  createNormalParagraph("│   └── schema.ts (Drizzle ORM models & Zod validation)", false),
+  createNormalParagraph("├── public/ (Static assets)", false),
+  createNormalParagraph("│   └── manifest.json (PWA manifest)", false),
+  createNormalParagraph("└── package.json (Dependencies & scripts)", false),
   new Paragraph({ spacing: { after: 400 } }),
   createCenteredText("Report Completed: December 3, 2025"),
   createCenteredText("Total Development Time: 200+ hours"),
@@ -739,20 +810,20 @@ const doc = new Document({
       children: [
         ...titlePage,
         ...certificatePage,
-        ...acknowledgementsPage,
-        ...abstractPage,
         ...listOfFiguresTablesPage,
         ...tableOfContentsPage,
+        ...acknowledgementsPage,
+        ...abstractPage,
+        ...abstractPage2,
         ...chapter1Page,
-        ...chapter1_2Page,
         ...chapter2Page,
-        ...chapter2_2Page,
-        ...chapter2_3Page,
         ...chapter3Page,
+        ...chapter3Page2,
         ...chapter4Page,
+        ...chapter4Page2,
         ...chapter5Page,
+        ...chapter5Page2,
         ...chapter6Page,
-        ...chapter7Page,
         ...referencesPage,
         ...appendixPage,
       ],
