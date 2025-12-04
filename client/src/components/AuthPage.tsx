@@ -401,9 +401,10 @@ export function AuthPage({ onAuthSuccess }: AuthPageProps) {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="google" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-1">
               <TabsTrigger value="google" data-testid="tab-google">Google</TabsTrigger>
-              <TabsTrigger value="phone" data-testid="tab-phone">Phone</TabsTrigger>
+              {/* Phone auth disabled for MVP - will be re-enabled at launch */}
+              {/* <TabsTrigger value="phone" data-testid="tab-phone">Phone</TabsTrigger> */}
             </TabsList>
 
             <TabsContent value="google" className="space-y-4">
@@ -418,9 +419,10 @@ export function AuthPage({ onAuthSuccess }: AuthPageProps) {
               </Button>
             </TabsContent>
 
-            <TabsContent value="phone">
+            {/* Phone auth disabled for MVP - will be re-enabled at launch */}
+            {/* <TabsContent value="phone">
               {renderPhoneStep()}
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </CardContent>
       </Card>

@@ -73,8 +73,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
 
   // Phone authentication endpoints (Firebase)
+  // NOTE: Phone auth is disabled for MVP - will be re-enabled at launch
   app.post('/api/auth/phone/verify-token', async (req, res) => {
     try {
+      // Phone auth disabled for MVP
+      return res.status(503).json({ message: "Phone authentication is disabled for MVP. Please use Google OAuth to sign in." });
+      
       if (!isPhoneAuthConfigured()) {
         return res.status(503).json({ message: "Phone authentication is not configured on the server" });
       }
@@ -107,6 +111,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/auth/phone/register', async (req: any, res) => {
     try {
+      // Phone auth disabled for MVP
+      return res.status(503).json({ message: "Phone authentication is disabled for MVP. Please use Google OAuth to sign in." });
+      
       const { firebaseToken, ...registrationData } = req.body;
 
       if (!firebaseToken) {
@@ -166,6 +173,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/auth/phone/login', async (req: any, res) => {
     try {
+      // Phone auth disabled for MVP
+      return res.status(503).json({ message: "Phone authentication is disabled for MVP. Please use Google OAuth to sign in." });
+      
       const { firebaseToken } = req.body;
 
       if (!firebaseToken) {
