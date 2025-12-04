@@ -1,0 +1,81 @@
+╔═══════════════════════════════════════════════════════════════════════════════════╗
+║                    WEBSOCKET REAL-TIME COMMUNICATION FLOW                          ║
+╠═══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                   ║
+║   ┌─────────────────────────────────────────────────────────────────────────┐    ║
+║   │                     WEBSOCKET CONNECTION LIFECYCLE                       │    ║
+║   └─────────────────────────────────────────────────────────────────────────┘    ║
+║                                                                                   ║
+║   STEP 1: CONNECTION ESTABLISHMENT                                               ║
+║   ─────────────────────────────────                                              ║
+║                                                                                   ║
+║   ┌──────────────┐           HTTP Upgrade Request           ┌──────────────┐    ║
+║   │   BROWSER    │ ──────────────────────────────────────► │   RAILWAY    │    ║
+║   │   (Client)   │           GET /ws                        │   (Server)   │    ║
+║   │              │           Upgrade: websocket             │              │    ║
+║   │              │ ◄────────────────────────────────────── │              │    ║
+║   │              │           101 Switching Protocols        │              │    ║
+║   └──────────────┘                                          └──────────────┘    ║
+║         │                                                          │             ║
+║         │◄─────────────── WSS Connection Established ─────────────►│             ║
+║         │                    (Persistent TCP)                      │             ║
+║                                                                                   ║
+║   STEP 2: SUBSCRIPTION (Region-based)                                            ║
+║   ────────────────────────────────────                                           ║
+║                                                                                   ║
+║   ┌──────────────┐    {"type":"SUBSCRIBE", "region":"NA"}   ┌──────────────┐    ║
+║   │   Client     │ ─────────────────────────────────────►  │   Server     │    ║
+║   │              │                                          │              │    ║
+║   │              │    {"type":"SUBSCRIBED", "success":true} │              │    ║
+║   │              │ ◄─────────────────────────────────────── │              │    ║
+║   └──────────────┘                                          └──────────────┘    ║
+║                                                                                   ║
+║   STEP 3: MATCH BROADCAST (Real-time Event)                                      ║
+║   ─────────────────────────────────────────                                      ║
+║                                                                                   ║
+║   ┌─────────┐   POST /api/matches   ┌─────────┐                                 ║
+║   │ Player A│ ───────────────────► │ Server  │                                 ║
+║   │ (posts) │                       │         │                                 ║
+║   └─────────┘                       │         │                                 ║
+║                                     │         │                                 ║
+║                                     │    ┌────▼────┐                            ║
+║                                     │    │ Stored  │                            ║
+║                                     │    │   in    │                            ║
+║                                     │    │   DB    │                            ║
+║                                     │    └────┬────┘                            ║
+║                                     │         │                                 ║
+║                                     │    ┌────▼────────────────────────┐        ║
+║                                     │    │   WebSocket Broadcast       │        ║
+║                                     │    │   to all region="NA"        │        ║
+║                                     │    │   subscribers               │        ║
+║                                     │    └────┬────────────┬───────────┘        ║
+║                                     │         │            │                    ║
+║                                     └─────────┼────────────┼───────────────────┘║
+║                                               │            │                     ║
+║   ┌─────────────┐                             │            │      ┌─────────┐   ║
+║   │  Player B   │ ◄───────────────────────────┘            └────► │Player C │   ║
+║   │(subscribed) │   {"type":"MATCH_POSTED",                       │         │   ║
+║   │             │    "match":{game:"Valorant",...}}               │         │   ║
+║   └─────────────┘                                                 └─────────┘   ║
+║        │                                                               │         ║
+║        ▼                                                               ▼         ║
+║   ┌─────────────┐                                                ┌─────────┐    ║
+║   │  UI Update  │                                                │UI Update│    ║
+║   │  <100ms     │                                                │ <100ms  │    ║
+║   │ "New Match!"│                                                │"New!"   │    ║
+║   └─────────────┘                                                └─────────┘    ║
+║                                                                                   ║
+║   ┌─────────────────────────────────────────────────────────────────────────┐    ║
+║   │                     MESSAGE TYPES SUPPORTED                              │    ║
+║   ├─────────────────────────────────────────────────────────────────────────┤    ║
+║   │  MATCH_POSTED    │ New match created, broadcast to all connected users  │    ║
+║   │  PLAYER_ACCEPTED │ Creator accepted player's application, match created │    ║
+║   │  VOICE_CREATED   │ Voice channel created, invite sent                   │    ║
+║   │  CONNECTION_REQ  │ Player application received by creator               │    ║
+║   └─────────────────────────────────────────────────────────────────────────┘    ║
+║                                                                                   ║
+║   ⚡ LATENCY: <100ms from broadcast to all connected clients                      ║
+║   🔄 RELIABILITY: Auto-reconnect on connection loss                              ║
+║   🌍 SCALING: Region-based subscriptions reduce message volume                   ║
+║                                                                                   ║
+╚═══════════════════════════════════════════════════════════════════════════════════╝
