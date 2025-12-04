@@ -1060,7 +1060,7 @@ Once connected, players can join the integrated voice channel:
 ║  ║   │   │              │  │   Server     │  │              │            │  ║   ║
 ║  ║   │   │ • /api/auth  │  │              │  │ • hms-service│            │  ║   ║
 ║  ║   │   │ • /api/users │  │ • Broadcast  │  │ • r2-storage │            │  ║   ║
-║  ║   │   │ • /api/match │  │ • Subscribe  │  │ • firebase   │            │  ║   ║
+║  ║   │   │ • /api/match │  │ • Connection │  │ • firebase   │            │  ║   ║
 ║  ║   │   │ • /api/voice │  │ • Heartbeat  │  │ • push-notif │            │  ║   ║
 ║  ║   │   └──────────────┘  └──────────────┘  └──────────────┘            │  ║   ║
 ║  ║   │                                                                    │  ║   ║
@@ -1496,17 +1496,7 @@ Response:
 ║         │◄─────────────── WSS Connection Established ─────────────►│             ║
 ║         │                    (Persistent TCP)                      │             ║
 ║                                                                                   ║
-║   STEP 2: SUBSCRIPTION (Region-based)                                            ║
-║   ────────────────────────────────────                                           ║
-║                                                                                   ║
-║   ┌──────────────┐    {"type":"SUBSCRIBE", "region":"NA"}   ┌──────────────┐    ║
-║   │   Client     │ ─────────────────────────────────────►  │   Server     │    ║
-║   │              │                                          │              │    ║
-║   │              │    {"type":"SUBSCRIBED", "success":true} │              │    ║
-║   │              │ ◄─────────────────────────────────────── │              │    ║
-║   └──────────────┘                                          └──────────────┘    ║
-║                                                                                   ║
-║   STEP 3: MATCH BROADCAST (Real-time Event)                                      ║
+║   STEP 2: MATCH BROADCAST (Real-time Event)                                      ║
 ║   ─────────────────────────────────────────                                      ║
 ║                                                                                   ║
 ║   ┌─────────┐   POST /api/matches   ┌─────────┐                                 ║
@@ -1522,15 +1512,15 @@ Response:
 ║                                     │         │                                 ║
 ║                                     │    ┌────▼────────────────────────┐        ║
 ║                                     │    │   WebSocket Broadcast       │        ║
-║                                     │    │   to all region="NA"        │        ║
-║                                     │    │   subscribers               │        ║
+║                                     │    │   to all connected          │        ║
+║                                     │    │   clients                   │        ║
 ║                                     │    └────┬────────────┬───────────┘        ║
 ║                                     │         │            │                    ║
 ║                                     └─────────┼────────────┼───────────────────┘║
 ║                                               │            │                     ║
 ║   ┌─────────────┐                             │            │      ┌─────────┐   ║
 ║   │  Player B   │ ◄───────────────────────────┘            └────► │Player C │   ║
-║   │(subscribed) │   {"type":"MATCH_POSTED",                       │         │   ║
+║   │ (connected) │   {"type":"MATCH_POSTED",                       │         │   ║
 ║   │             │    "match":{game:"Valorant",...}}               │         │   ║
 ║   └─────────────┘                                                 └─────────┘   ║
 ║        │                                                               │         ║
@@ -1552,7 +1542,7 @@ Response:
 ║                                                                                   ║
 ║   ⚡ LATENCY: <100ms from broadcast to all connected clients                      ║
 ║   🔄 RELIABILITY: Auto-reconnect on connection loss                              ║
-║   🌍 SCALING: Region-based subscriptions reduce message volume                   ║
+║   🔗 EFFICIENCY: Single persistent connection replaces polling                   ║
 ║                                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝
 ```
@@ -1566,13 +1556,10 @@ This diagram illustrates how Nexus achieves real-time updates using WebSocket te
 **Step 1: Connection Establishment**
 When a user opens Nexus, their browser initiates an HTTP Upgrade request to the backend. The server responds with "101 Switching Protocols," establishing a persistent WebSocket connection. Unlike HTTP (request-response), WebSocket maintains an open bidirectional channel for instant communication.
 
-**Step 2: Region-Based Subscription**
-After connection, the client sends a subscription message specifying their region (NA, EU, ASIA, etc.). The server adds them to a region-specific broadcast group. This optimization ensures players only receive notifications for matches in their geographic area, reducing noise and bandwidth.
-
-**Step 3: Match Broadcast**
+**Step 2: Match Broadcast**
 When Player A posts a new match:
 1. The POST /api/matches endpoint saves the match to PostgreSQL
-2. The server immediately broadcasts a "MATCH_POSTED" event to all clients subscribed to that region
+2. The server immediately broadcasts a "MATCH_POSTED" event to all connected clients
 3. Player B and Player C receive the event within 100ms
 4. Their React components update the UI to show the new match—no page refresh required
 
@@ -1588,7 +1575,7 @@ When Player A posts a new match:
 - **Real-time UX:** Users see updates as they happen, creating a "live" feel
 - **Scalability:** One connection handles all events vs repeated HTTP requests
 
-The auto-reconnect feature ensures reliability—if a connection drops (network change, server restart), the client automatically reconnects and resubscribes.
+The auto-reconnect feature ensures reliability—if a connection drops (network change, server restart), the client automatically reconnects.
 
 #### WebSocket Connection Flow (Code Example)
 
@@ -1611,25 +1598,36 @@ ws.onmessage = (event) => {
   }
 };
 
-ws.send(JSON.stringify({
-  type: 'SUBSCRIBE_REGION',
-  region: 'NA'
-}));
+ws.onopen = () => {
+  console.log('WebSocket connected');
+};
 ```
 
 #### Backend WebSocket Handler
 
 ```javascript
-// Server broadcasting to subscribers
-io.on('connection', (socket) => {
-  socket.on('subscribe_region', (region) => {
-    socket.join(`region_${region}`);
-  });
+// Server broadcasting to all connected clients
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ server });
+
+const clients = new Set();
+
+wss.on('connection', (ws) => {
+  clients.add(ws);
   
-  socket.on('match_posted', (matchData) => {
-    io.to(`region_${matchData.region}`).emit('match_update', matchData);
+  ws.on('close', () => {
+    clients.delete(ws);
   });
 });
+
+// Broadcast match to all connected clients
+function broadcastMatch(matchData) {
+  clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ type: 'MATCH_POSTED', match: matchData }));
+    }
+  });
+}
 ```
 
 ---
@@ -2826,6 +2824,142 @@ The following diagrams are split versions of the consolidated architecture diagr
 ║                                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝
 ```
+
+---
+
+### USER JOURNEY - SPLIT INTO 2 DIAGRAMS
+
+#### DIAGRAM 10A: USER JOURNEY PART 1 (Steps 1-3)
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════════╗
+║                    USER JOURNEY: FINDING A MATCH (Part 1)                          ║
+╠═══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                   ║
+║   ┌─────────────┐                                                                 ║
+║   │   START     │                                                                 ║
+║   │  New User   │                                                                 ║
+║   └──────┬──────┘                                                                 ║
+║          │                                                                        ║
+║          ▼                                                                        ║
+║   ┌─────────────────────────────────────────────────────────────────────────┐    ║
+║   │  STEP 1: SIGNUP / LOGIN                                                  │    ║
+║   │                                                                          │    ║
+║   │  ┌───────────────┐            ┌───────────────┐                         │    ║
+║   │  │ Google OAuth  │     OR     │  Phone OTP    │                         │    ║
+║   │  │  (Instant)    │            │ (SMS Verify)  │                         │    ║
+║   │  └───────┬───────┘            └───────┬───────┘                         │    ║
+║   │          └────────────┬───────────────┘                                 │    ║
+║   │                       ▼                                                  │    ║
+║   │              ┌────────────────┐                                          │    ║
+║   │              │ User Created   │                                          │    ║
+║   │              │ Session Active │                                          │    ║
+║   │              └────────────────┘                                          │    ║
+║   └─────────────────────────────────────────────────────────────────────────┘    ║
+║                       │                                                           ║
+║                       ▼                                                           ║
+║   ┌─────────────────────────────────────────────────────────────────────────┐    ║
+║   │  STEP 2: POST MATCH (LFG/LFO)                                            │    ║
+║   │                                                                          │    ║
+║   │  User fills form:                        API Call:                       │    ║
+║   │  ┌──────────────────────┐               ┌──────────────────────┐        │    ║
+║   │  │ Game: Valorant       │    ─────►     │ POST /api/matches    │        │    ║
+║   │  │ Type: LFG            │               │ {game, type, skill,  │        │    ║
+║   │  │ Skill: Gold          │               │  players}            │        │    ║
+║   │  │ Players Needed: 3    │               └──────────────────────┘        │    ║
+║   │  └──────────────────────┘                         │                      │    ║
+║   │                                                   ▼                      │    ║
+║   │                                          ┌──────────────────────┐        │    ║
+║   │                                          │ Saved to PostgreSQL  │        │    ║
+║   │                                          │ + WebSocket Broadcast│        │    ║
+║   │                                          └──────────────────────┘        │    ║
+║   └─────────────────────────────────────────────────────────────────────────┘    ║
+║                       │                                                           ║
+║                       ▼                                                           ║
+║   ┌─────────────────────────────────────────────────────────────────────────┐    ║
+║   │  STEP 3: MATCH VISIBLE IN FEED                                           │    ║
+║   │                                                                          │    ║
+║   │  Other players see match in their feed:                                 │    ║
+║   │  ┌─────────────────────────────────────────┐                            │    ║
+║   │  │ 🎮 Valorant LFG                         │                            │    ║
+║   │  │ Creator: Pro_Player | Gold Tier        │                            │    ║
+║   │  │ Players Needed: 3                      │                            │    ║
+║   │  │                                         │                            │    ║
+║   │  │ [View Portfolio] [Apply to Match]      │                            │    ║
+║   │  └─────────────────────────────────────────┘                            │    ║
+║   │                                                                          │    ║
+║   │  Match persists in feed until creator or all players disconnect         │    ║
+║   └─────────────────────────────────────────────────────────────────────────┘    ║
+║                       │                                                           ║
+║                       ▼                                                           ║
+║                 (Continued in Part 2)                                             ║
+║                                                                                   ║
+╚═══════════════════════════════════════════════════════════════════════════════════╝
+```
+
+**Part 1 - Steps 1-3:**
+- **Step 1:** User signs up or logs in using Google OAuth (instant) or Phone OTP (SMS verification)
+- **Step 2:** User posts a match request (LFG = Looking For Group, LFO = Looking For Opponent) specifying game, skill level, and players needed
+- **Step 3:** Match appears in the feed for all connected players to view and apply
+
+---
+
+#### DIAGRAM 10B: USER JOURNEY PART 2 (Steps 4-5)
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════════╗
+║                    USER JOURNEY: FINDING A MATCH (Part 2)                          ║
+╠═══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                   ║
+║                 (Continued from Part 1)                                           ║
+║                       │                                                           ║
+║                       ▼                                                           ║
+║   ┌─────────────────────────────────────────────────────────────────────────┐    ║
+║   │  STEP 4: PLAYER APPLIES & CREATOR ACCEPTS                               │    ║
+║   │                                                                          │    ║
+║   │  Player Application Flow:                                                │    ║
+║   │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │    ║
+║   │  │ Player views │  │ Clicks       │  │  Creator     │  │  Connection  │ │    ║
+║   │  │  portfolio   │─►│ "Apply to    │─►│  reviews     │─►│  created     │ │    ║
+║   │  │              │  │ Match"       │  │  applicants  │  │  & notified  │ │    ║
+║   │  └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘ │    ║
+║   │                                                                          │    ║
+║   │  Creator accepts selected players                                        │    ║
+║   │  → Both players notified of match creation                               │    ║
+║   └─────────────────────────────────────────────────────────────────────────┘    ║
+║                       │                                                           ║
+║                       ▼                                                           ║
+║   ┌─────────────────────────────────────────────────────────────────────────┐    ║
+║   │  STEP 5: JOIN VOICE CHANNEL & ONGOING MATCH                              │    ║
+║   │                                                                          │    ║
+║   │  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐             │    ║
+║   │  │ User clicks  │     │ Backend gets │     │ 100ms React  │             │    ║
+║   │  │ "Join Voice" │ ──► │ 100ms token  │ ──► │ SDK connects │             │    ║
+║   │  └──────────────┘     └──────────────┘     └──────────────┘             │    ║
+║   │                                                    │                     │    ║
+║   │                                                    ▼                     │    ║
+║   │                                           🎤 Users in voice chat         │    ║
+║   │                                              (real-time audio)           │    ║
+║   │                                                                          │    ║
+║   │  Connection persists until all players disconnect                        │    ║
+║   │  Players can rejoin voice channel anytime during active match            │    ║
+║   │  Connection history saved for future matching                            │    ║
+║   └─────────────────────────────────────────────────────────────────────────┘    ║
+║                       │                                                           ║
+║                       ▼                                                           ║
+║                 ┌─────────┐                                                       ║
+║                 │   END   │                                                       ║
+║                 │ Success │                                                       ║
+║                 └─────────┘                                                       ║
+║                                                                                   ║
+║   ⏱️ TOTAL TIME: ~5 MINUTES (vs 30-60 minutes traditional method)                 ║
+║                                                                                   ║
+╚═══════════════════════════════════════════════════════════════════════════════════╝
+```
+
+**Part 2 - Steps 4-5:**
+- **Step 4:** Players browse portfolios and apply to matches. Match creator reviews applicants and accepts selected players. Both parties receive notifications.
+- **Step 5:** Players join voice channel using 100ms integration for real-time audio communication. The entire process takes approximately 5 minutes versus 30-60 minutes with traditional methods.
 
 ---
 
