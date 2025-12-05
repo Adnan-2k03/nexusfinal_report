@@ -138,6 +138,12 @@ def main():
         ["3", "Firebase SMS Pricing by Region", "32"],
         ["4", "System Performance Metrics", "25"],
         ["5", "Database Tables and Schema", "19"],
+        ["A1", "API Endpoints Overview (Appendix)", "33"],
+        ["A2", "Database Tables and Schema (Appendix)", "34"],
+        ["A3", "Cost Analysis - MVP Phase (Appendix)", "35"],
+        ["A4", "System Performance Metrics (Appendix)", "36"],
+        ["A5", "Firebase SMS Pricing by Region (Appendix)", "37"],
+        ["A6", "Team Member Contributions (Appendix)", "38"],
     ]
     
     create_table(doc, ["Table No.", "Title", "Page No."], tables_data, [3, 10, 2.5])
@@ -172,6 +178,12 @@ def main():
         ["6", "Conclusion & Future Works", "30"],
         ["7", "References", "32"],
         ["8", "Appendix", "33"],
+        ["", "A1. API Endpoints Overview", "33"],
+        ["", "A2. Database Tables and Schema", "34"],
+        ["", "A3. Cost Analysis (MVP Phase)", "35"],
+        ["", "A4. System Performance Metrics", "36"],
+        ["", "A5. Firebase SMS Pricing by Region", "37"],
+        ["", "A6. Team Member Contributions", "38"],
     ]
     
     create_table(doc, ["S.No.", "Chapter Title", "Page No."], toc_data, [2, 11, 2.5])
